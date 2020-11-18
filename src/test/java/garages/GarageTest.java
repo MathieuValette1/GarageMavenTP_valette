@@ -20,14 +20,16 @@ public class GarageTest {
 		g1 = new Garage("ISIS Castres");
 		g2 = new Garage("Universite Champollion Albi");
 	}
-
+        
+        //S1
 	@Test
 	public void testInitialisationVoiture() {
 		// Au début, la voiture n'est pas dans un garage
 		assertFalse(v1.estDansUnGarage());
 		assertTrue(v1.garagesVisites().isEmpty());
 	}
-
+        
+        //S2
 	@Test
 	public void testEntreeGarage() throws Exception {
 		// On fait entrer la voiture au garage g1
@@ -37,7 +39,8 @@ public class GarageTest {
 		// g1 fait partie des garages visités par la voiture
 		assertTrue(v1.garagesVisites().contains(g1));
 	}
-
+        
+        //S3
 	@Test
 	public void testSortieGarage() throws Exception {
 		v1.entreAuGarage(g1);
@@ -45,9 +48,11 @@ public class GarageTest {
 		// Elle n'est plus dans un garage
 		assertFalse(v1.estDansUnGarage());
 		// g1 fait partie des garages visités par la voiture
-		assertTrue(v1.garagesVisites().contains(g1));
+                
+               assertTrue(v1.garagesVisites().contains(g1));
 	}
-
+        
+        //S4
 	@Test
 	public void testDoubleSortie() throws Exception {
 		v1.entreAuGarage(g1);
@@ -60,7 +65,8 @@ public class GarageTest {
 			// Si on arrive ici, il y a eu une exception, c'est ce qui est attendu
 		}
 	}
-
+        
+        //S5
 	@Test
 	public void testDoubleEntree() throws Exception {
 		v1.entreAuGarage(g1);
@@ -72,7 +78,8 @@ public class GarageTest {
 			// Si on arrive ici, il y a eu une exception, c'est ce qui est attendu
 		}
 	}
-
+        
+        //S6
 	/**
 	 * Exemple de test qui vérifie un format d'impression correct.<br>`
 	 * La méthode "imprimeStationnements" est conçue pour être testable :<br>
@@ -113,7 +120,8 @@ public class GarageTest {
 		assertEquals(1,	countSubstring(output, "en cours"),
                         "Il doit y avoir un seul stationnement en cours");
 	}
-
+        
+        //S7
 	/**
 	 * Une méthode utilitaire pour le test ci-dessus
 	 * Compter le nombre d'occurrences d'une sous-chaîne dans une chaîne

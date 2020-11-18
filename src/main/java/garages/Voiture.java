@@ -2,6 +2,7 @@ package garages;
 
 import java.io.PrintStream;
 import java.util.*;
+import java.lang.Exception;
 
 public class Voiture {
 
@@ -29,19 +30,12 @@ public class Voiture {
 	 * @throws java.lang.Exception Si déjà dans un garage
 	 */
 	public void entreAuGarage(Garage g) throws Exception {
-		// On créé le stationnement
-                Stationnement s = new Stationnement(this, g);
-                Stationnement dernierStationnement = myStationnements.get(-1);
-                //On vérifie si la voiture a déjà un stationnement en cours (elle ne peut pas avoir deux stationnements en même temps
-                if (!dernierStationnement.estEnCours()){
-                    // dans le cas où il n'y en a pas, on ajoute le stationnement à la liste
-                    myStationnements.add(s);
-                    
+                if (this.estDansUnGarage()){
+                    throw new Exception("La voiture est déjà stationnée quelque part :/");
                 }
-                else {
-                    throw new java.lang.Exception("La voiture est déjà stationnée quelque part :/");
-                }    
-	}
+                Stationnement s = new Stationnement(this, g);
+                myStationnements.add(s);
+        }
 
 	/**
 	 * Fait sortir la voiture du garage 
@@ -50,23 +44,30 @@ public class Voiture {
 	 * @throws java.lang.Exception si la voiture n'est pas dans un garage
 	 */
 	public void sortDuGarage() throws Exception {
-		// On trouve le dernier stationnement de la voiture
-                Stationnement dernierStationnement = myStationnements.get(-1);
-                if (dernierStationnement.estEnCours()){
-                    // On le termine si il est en cours
-                    dernierStationnement.terminer();
+		if (!myStationnements.isEmpty()){
+                    
+                    // On trouve le dernier stationnement de la voiture
+                    Stationnement dernierStationnement = myStationnements.get(myStationnements.size()-1);
+                    if (dernierStationnement.estEnCours()){
+                        // On le termine si il est en cours
+                        dernierStationnement.terminer();
+                    }
+                    else {
+                        throw new Exception("La voiture n'est pas dans un garage :/");
+                    }
                 }
                 else {
-                    throw new java.lang.Exception("La voiture n'est pas dans un garage :/");
+                    throw new Exception("La voiture n'est pas dans un garage :/");
                 }
-	}
+                }
+	
 
 	/**
 	 * @return l'ensemble des garages visités par cette voiture
 	 */
 	public Set<Garage> garagesVisites() {
 		
-		NavigableSet<Garage> garagesVisites = new TreeSet<>();
+		Set<Garage> garagesVisites = new HashSet<>();
                 Iterator<Stationnement> stationnementsIterator = myStationnements.iterator();
                 while(stationnementsIterator.hasNext()){
                     garagesVisites.add(stationnementsIterator.next().getGarage());   
@@ -79,11 +80,16 @@ public class Voiture {
 	 */
 	public boolean estDansUnGarage() {
 		// Cela reviens à vérifier si la voiture a un stationnement en cours
-		Stationnement dernierStationnement = myStationnements.get(-1);
-                if (dernierStationnement.estEnCours()){
-                    return true;
+                if (!myStationnements.isEmpty()){
+                    Stationnement dernierStationnement = myStationnements.get(myStationnements.size()-1);
+                    if (dernierStationnement.estEnCours()){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
                 }
-                else{
+                else {
                     return false;
                 }
 	}
@@ -103,21 +109,23 @@ public class Voiture {
 	 * @param out l'endroit où imprimer (ex: System.out)
 	 */
 	public void imprimeStationnements(PrintStream out) {
-		// TODO: Implémenter cette méthode
-		Set<Garage> garagesVisites = this.garagesVisites();
-                Iterator<Garage> garagesIterator = garagesVisites.iterator();
-                Iterator<Stationnement> stationnementsIterator = myStationnements.iterator();
-                while(garagesIterator.hasNext()){
-                    Garage prochainGarage = garagesIterator.next();
-                    out.println(prochainGarage.toString()+":");
-                    while (stationnementsIterator.hasNext()){
-                        Garage prochainGarageDuStationnement = stationnementsIterator.next().getGarage();
-                                if (prochainGarageDuStationnement.equals(prochainGarage)) {
-                            out.println(prochainGarageDuStationnement.toString());
+            
+                Iterator<Garage> garagesIterator = this.garagesVisites().iterator();                
+                while (garagesIterator.hasNext()){
+                    Iterator<Stationnement> stationnementIterator = myStationnements.iterator();
+                    Garage g = garagesIterator.next();
+                    out.println(g.toString()+":");
+                    while (stationnementIterator.hasNext()){
+                        Stationnement s = stationnementIterator.next();
+                        if (g.equals(s.getGarage())) {
+                            out.println("\t " + s.toString());
                         }
                     }
+               
                 }
+                
         }
-	}
+}
+        
 
 
